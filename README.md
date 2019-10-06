@@ -1,21 +1,8 @@
-# Springboard
-Hosts work for Springboard
-
 ### Capstone project proposal ###
 
 A project using NLP on the dataset “Comments on articles published in the New York Times” (https://www.kaggle.com/aashita/nyt-comments). 
 
-The ultimate goal of this project is to build a web interface in which data for a new article (topic, summary, title, tags) could be entered, and the model will:
-1)	generate statistics such as the number of comments that this article would receive and the number of abusive comments (reported by other readers). 
-
-2)	This model will also generate a sample of possible comments which would be made on this article, as well as an estimate of how many recommendations each comment would receive.
-
-For step 1), the model will use metadata about articles published in the New York Times including headlines, topic keywords, word count, and snippets of text from the article to predict the total number of comments that a test article will receive.
-I can train my model by comparing the known comment count to the predicted count.
-
-For step 2), the article will be trained on a dataset of comments for these articles to generate comments for the above articles and evaluating how many recommendations each comment will receive.
-
-This project should ultimately be hosted on a simple web server which can take an input through text boxes, or through uploading a file. The output can be displayed on the page or downloaded.
+The ultimate goal of this project is to build a web interface in which a user can enter a sample comment for a news article and receive a prediction of how many 'likes' or 'recommendations' their comment will receive. This program could be useful to authors to create a spam filter that removes low-value comments.
 
 
 ### Data for this project ###
@@ -24,7 +11,15 @@ The data for this project is saved inder the /Data directory as .csv files. One 
 
 This data was taken from the ["New York Times Comments"](https://www.kaggle.com/aashita/nyt-comments "New York Times Comments") dataset on Kaggle.
 
+### Using this project ###
 
+After cloning this repo, make sure that the comment data files are places in the Data directory. Then run the following commands from the Notebook directory:
+
+python "Data cleaning and exploration.py"
+python "fastai-binary.py"
+python "Notebooks-fastai-app.py" "THIS IS A COMMENT!"
+
+You can replace the last argument to the previous command with any comment of your choice. You will receive a message such as: "This comment was placed in category 0. This means that we predict your comment will have between -1 and 1 recommendations."
 
 
 
