@@ -58,29 +58,10 @@ train = pd.read_csv(r"C:\Users\msteele9\Documents\Springboard\prod_repo\NLP_prod
 train.head(5)
 
 
-# # Initial goals: 
-# 
-# -Make sure the contents of each field are the correct type and have no missing data (i.e. scrub the 'NaN' from the 'abstract' field)
-# 
-# -Make sure that the data comes properly tokenized
-# 
-# -Convert all words to lowercase (to avoid confusion between uppercase and lowercase versions of the same word)
-# 
-# Several of these data columns (articleID, articleWordCount, multimedia, printPage) contain only integers or single lowercase words.
-
 # In[ ]:
 
 
-#nltk.download('wordnet')
-#for column in train:
-    #print(train[column].get_dtype_counts())
-    
-print(train.dtypes.value_counts())
 
-print("")
-
-for column in train:
-    print(train[column].dtypes)
 
 
 # ###### From the above code, the only integer columns are 2, 7 and 9. The rest are string columns and need to be converted to lowercase. 
@@ -125,15 +106,10 @@ clean_art.head(5)
 #print('\n'.join(clean))
 
 
-# ###### I want to check for cells that have missing elements.
-
 # In[ ]:
 
 
-print("Any null values left: ")
-print(clean_art.isnull().values.any())
-print("Dataset size: ")
-print(len(train))
+
 
 
 # ###### Now we want a separate section to clean the comment files.
@@ -186,14 +162,13 @@ clean_comments['recommendations'].head(50)
 # In[ ]:
 
 
-print("Any null values left: "), print(clean_comments.isnull().values.any())
+
 
 
 # In[ ]:
 
 
-print(len(clean_comments))
-clean_comments.nunique()
+
 
 
 # I see that there are no null values remaining, but looking at the dataframe I see that several columns contain nothing but 'nan' strings or otherwise have only one value. I want to drop the commentTitle (contains only <br/> or nan), recommendedFlag, reportAbuseFlag, status, timespeople, userTitle and userURL columns.
@@ -226,132 +201,40 @@ com_file_name = "cleaned_comment_data.csv"
 clean_com_csv = clean_comments.to_csv(com_file_name, encoding='utf-8', index=False)
 
 
-# ###### Here I have saved the cleaned data files to storage. This is a good break point where I can use these files to begin looking at possible ML models. 
-#     
-#    In the next section, I will explore the data, looking at features and ways to visualize the feature set. I begin by re-importing the libraries that I will use. That way, this section of the notebook can be reran separately later. I will load the cleaned files in so that I know I am not making any changes to the stored version.
-
 # In[ ]:
 
 
-import pandas as pd
-import numpy as np
-import nltk
-#ntlk.download()
-sent_token = nltk.sent_tokenize
-import csv  
-from nltk import sent_tokenize, word_tokenize, pos_tag
-import re
-from sklearn.feature_extraction.text import CountVectorizer
-wpt = nltk.WordPunctTokenizer()
-stop_words = nltk.corpus.stopwords.words('english')
 
-file_path_art = r"C:\Users\msteele9\Documents\Springboard\Springboard\Data\cleaned_article_data.csv"
-clean_art = pd.read_csv(file_path_art, index_col = False)
-clean_art
-
-file_path_comments = r"C:\Users\msteele9\Documents\Springboard\Springboard\Data\cleaned_comment_data.csv"
-clean_comments = pd.read_csv(file_path_comments, index_col = False)
-
-
-# ###### In the above cell, I loaded in the cleaned article data. Here I load in the cleaned data and do preprocessing to run the data through a random forest model. 
-#     
-#    I want to make sure that my data can actually be loaded and that my simple test will produce results of some sort - this way I know that my data will not break when I try to load it.
-#    
-#    My target is the number of recommendations that the comment receives. I want to know how well a simple model can predict the number of recommendations a comment will receive when given the rest of that comment's data.
-# 
-
-# In[ ]:
-
-
-from sklearn import preprocessing
-le = preprocessing.LabelEncoder()
-
-features = clean_comments.columns.tolist()
-print(features)
 
 
 # In[ ]:
 
 
-from sklearn import preprocessing
-le = preprocessing.LabelEncoder()
 
-features = clean_comments.columns.tolist()
-output = 'recommendations'
-features.remove('recommendations')
-
-for column in clean_comments.columns:
-    clean_comments[column] = clean_comments[column].astype(str)
-    if clean_comments[column].dtype == type(object):
-        clean_comments[column] = le.fit_transform(clean_comments[column])
-
-#print(features)
-
-pd.set_option('display.max_columns', None)
-pd.set_option('display.max_rows', None)
-
-clean_comments.astype(float)
-clean_comments.head(5)
-
-#clean_comments.dtypes
 
 
 # In[ ]:
 
 
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.datasets import make_classification
-from sklearn.model_selection import GridSearchCV
-from sklearn.naive_bayes import GaussianNB, BernoulliNB, MultinomialNB
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import accuracy_score, log_loss
-from sklearn.model_selection import GridSearchCV
 
-rf = RandomForestClassifier()
-
-param = {'n_estimators': [5, 10, 20],
-         'max_depth': [5, 10, 20] }
-
-gs=GridSearchCV(rf, param, cv=5, n_jobs=5)
-
-gs_fit = gs.fit(clean_comments[features], clean_comments[output])
 
 
 # In[ ]:
 
 
-pd.DataFrame(gs_fit.cv_results_).sort_values(by=['rank_test_score']).head(5)
 
 
-# ###### A quick GridSearch with a random forest classifier was able run on my data set and produce an accuracy score. My goal was to confirm that I can run ML algorithms on my data set and get sensible results; this test seems to verify this.
-# 
-# Here I am looking to see what the best model is doing. Only a few of our features have a strong impact on the number of recommendations. It looks like the dominant features are the approve date and the comment body. These intuitively make sense - we expect the content of the comment to be one of if not the most important feature, and the time the comment is posted likely determines how many people will see it.
 
 # In[ ]:
 
 
-import matplotlib.pyplot as plt
 
-importances = gs_fit.best_estimator_.feature_importances_
 
-std = np.std([tree.feature_importances_ for tree in gs_fit.best_estimator_.estimators_],
-             axis=0)
-indices = np.argsort(importances)[::-1]
 
-print("Feature ranking:")
+# In[ ]:
 
-for f in range(clean_comments[features].shape[1]):
-    print("%d. feature %d : (%s) (%f)" % (f + 1, indices[f], features[f], importances[indices[f]]))
-    
-    # Plot the feature importances of the forest
-plt.figure()
-plt.title("Feature importances")
-plt.bar(range(clean_comments[features].shape[1]), importances[indices],
-       color="r", yerr=std[indices], align="center")
-plt.xticks(range(clean_comments[features].shape[1]), indices)
-plt.xlim([-1, clean_comments[features].shape[1]])
-plt.show()
+
+
 
 
 # In[ ]:
