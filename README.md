@@ -18,6 +18,10 @@ conda create -n fastai python=3.6
 
 Documentation for installing conda can be found [here.](https://docs.anaconda.com/anaconda/install/)
 
+### Hardware ###
+
+I trained this model on a Google Cloud server using 8 vCPU cores and one Nvidia k80 GPU for ~6 hours at a cost of ~$10. The fastai library is an API that sits on top of pytorch. Pytorch is designed to work with or without a GPU; however, it is ill-advised to attempt to train this model on a CPU alone. Once the model is trained, it can be run very quickly on small samples using only a CPU.
+
 ### Using this project ###
 
 After cloning this repo, make sure that the comment data files are places in the Data directory. Then run the following commands from the Notebook directory:
