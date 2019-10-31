@@ -29,7 +29,9 @@ I trained this model on a Google Cloud server using 8 vCPU cores and one Nvidia 
 After cloning this repo, make sure that the comment data files are places in the Data directory. Then run the following commands from the Notebook directory:
 
 python "Data cleaning and exploration.py"
+
 python "fastai-binary.py"
+
 python "Notebooks-fastai-app.py" "THIS IS A COMMENT!"
 
 You can replace the last argument to the previous command with any comment of your choice. You will receive a message such as: "This comment was placed in category 0. This means that we predict your comment will have between -1 and 1 recommendations."
@@ -41,7 +43,9 @@ The "Data cleaning and exploration.py" program will output cleaned data files wh
 After cloning this repo, make sure that the comment data files are places in the Data directory. Then run the following commands from the Notebook directory:
 
 python "Data cleaning and exploration.py"
+
 python "fastai-binary.py"
+
 python "Notebooks-fastai-app.py" "THIS IS A COMMENT!"
 
 You can replace the last argument to the previous command with any comment of your choice. You will receive a message such as: "This comment was placed in category 0. This means that we predict your comment will have between -1 and 1 recommendations."
