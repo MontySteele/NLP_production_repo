@@ -6,7 +6,7 @@ This repo builds and saves the trained neural network which can be used for this
 
 ### Data for this project ###
 
-The data for this project is saved inder the /Data directory as .csv files. One group of files contains data on ~9000 New York Times articles. The other group of files  contains ~2M comments made on these articles. The comment data files were stored as git LFS objects, but due to these files exceeding the maximum size permitted by LFS storage, they are not currently available.
+The data for this project is saved under the /Data directory as .csv files. One group of files contains data on ~9000 New York Times articles. The other group of files  contains ~2M comments made on these articles. The comment data files were stored as git LFS objects, but due to these files exceeding the maximum size permitted by LFS storage, they are not currently available.
 
 This data was taken from the ["New York Times Comments"](https://www.kaggle.com/aashita/nyt-comments "New York Times Comments") dataset on Kaggle.
 
