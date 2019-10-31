@@ -7,7 +7,7 @@
 # 
 # The first block of this code combines my data files into a single large file, one each for articles and comments.
 
-# In[2]:
+# In[16]:
 
 
 import glob
@@ -53,7 +53,7 @@ if len(df_list) > 0:
 
 # ###### Now we want a separate section to clean the comment files.
 
-# In[7]:
+# In[20]:
 
 
 import pandas as pd
@@ -70,16 +70,15 @@ wpt = nltk.WordPunctTokenizer()
 stop_words = nltk.corpus.stopwords.words('english')
 
 
-
 #For all data - train = pd.read_csv("/root/Springboard/Data/cleaning/allComments.csv")
 
 train = pd.read_csv("allComments.csv")
-
+train = train.dropna(how='all')
 #train['recommendations'].head(5)
 train
 
 
-# In[8]:
+# In[21]:
 
 
 train= train.astype(str)
@@ -114,13 +113,13 @@ clean_comments.head(5)
 clean_comments['recommendations'].head(50)
 
 
-# In[9]:
+# In[22]:
 
 
 print("Any null values left: "), print(clean_comments.isnull().values.any())
 
 
-# In[10]:
+# In[23]:
 
 
 print(len(clean_comments))
@@ -129,7 +128,7 @@ clean_comments.nunique()
 
 # I see that there are no null values remaining, but looking at the dataframe I see that several columns contain nothing but 'nan' strings or otherwise have only one value. I want to drop the commentTitle (contains only <br/> or nan), recommendedFlag, reportAbuseFlag, status, timespeople, userTitle and userURL columns.
 
-# In[11]:
+# In[24]:
 
 
 clean_comments.drop(columns=['commentTitle', 'recommendedFlag', 'reportAbuseFlag', 'status', 'timespeople', 'userTitle', 'userURL'], axis=1, inplace=True)
@@ -139,17 +138,11 @@ clean_comments.head(5)
 
 # ###### I check my working directory to make sure I am saving the files where I want them stored.
 
-# In[12]:
+# In[25]:
 
 
 com_file_name = "cleaned_comment_data.csv"
 clean_com_csv = clean_comments.to_csv(com_file_name, encoding='utf-8', index=False)
-
-
-# In[14]:
-
-
-nbconvert to script "Data cleaning.py"
 
 
 # In[ ]:
