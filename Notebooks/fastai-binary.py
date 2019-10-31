@@ -3,7 +3,7 @@
 
 # ###### In this notebook I attempt to fit my data using a neural network with the fastai library. Here I am using only two output categories and find that my accuracy is much improved (~85%).
 
-# In[1]:
+# In[7]:
 
 
 import pandas as pd
@@ -15,13 +15,14 @@ import random
 from datetime import datetime
 
 from fastai.text import *
-file_path_comments = r'~/Documents\Springboard\prod_repo\NLP_production_repo\Data\cleaned_comment_data.csv'
+
+file_path_comments = '../Data/cleaned_comment_data.csv'
 #file_path_comments = r'/mnt/c/Users/msteele9/Documents/Springboard/Springboard/Data/cleaned_comment_data.csv'
 
 clean_comments = pd.read_csv(file_path_comments, index_col = False)
 
 
-# In[2]:
+# In[8]:
 
 
 X = clean_comments['commentBody']
@@ -32,7 +33,7 @@ y.head(5)
 
 # ## In this next cell, I convert my integer target, 'recommendations', to a category target. I create bins such as (-1 to 1), (1 to 25) and so on, placing my recommendation values in the correct bin.
 
-# In[3]:
+# In[9]:
 
 
 #set up bins
@@ -46,7 +47,7 @@ category.columns = ['range']
 df_new = pd.concat([y,category],axis = 1)
 
 
-# In[4]:
+# In[10]:
 
 
 df_new.head(10)
@@ -54,25 +55,25 @@ df_new.head(10)
 
 # ### Here I create a crossfold validation split. I then merge the separated comments and recommendation counts into one dataframe containing training data and one dataframe containing test data, which fastai takes as inputs.
 
-# In[29]:
+# In[11]:
 
 
 X_train, X_test, y_train, y_test = train_test_split(
     X, df_new['range'], test_size=0.2, random_state=random.seed(datetime.now()))
 
 
-# In[30]:
+# In[12]:
 
 
 df_nlp_data_train = pd.concat([y_train, X_train], axis=1)
 df_nlp_data_test = pd.concat([y_test, X_test], axis=1)
 
-path = r'~/Documents/Springboard/Springboard/Data/'
+path = ''
 data_lm = TextLMDataBunch.from_df(path="", train_df=df_nlp_data_train, valid_df=df_nlp_data_test, bs=32)
 data_clas  = TextClasDataBunch.from_df(path="", train_df=df_nlp_data_train, valid_df=df_nlp_data_test, bs=32)
 
 
-# In[31]:
+# In[13]:
 
 
 #data_clas.show_batch(1)
@@ -80,7 +81,7 @@ data_clas  = TextClasDataBunch.from_df(path="", train_df=df_nlp_data_train, vali
 
 # ### In this cell I am creating my model using data blocks created using the text classifier with the LSTM model architecture.
 
-# In[32]:
+# In[15]:
 
 
 learn = language_model_learner(data_lm, AWD_LSTM)
@@ -90,42 +91,42 @@ learn.fit_one_cycle(1, slice(1e-2), moms=(0.8,0.7))
 learn.save_encoder('enc')
 
 
-# In[33]:
+# In[16]:
 
 
 learn = text_classifier_learner(data_clas, arch=AWD_LSTM, drop_mult=0.3)
 learn.load_encoder('enc')
 
 
-# In[34]:
+# In[17]:
 
 
 learn.lr_find()
 
 
-# In[35]:
+# In[18]:
 
 
 learn.recorder.plot(suggestion=True, skip_end=15)
 min_grad_lr=learn.recorder.min_grad_lr
 
 
-# In[36]:
+# In[19]:
 
 
 learn.fit_one_cycle(1, min_grad_lr, moms=(0.8,0.7))
 
 
-# In[37]:
+# In[20]:
 
 
 learn.save('fit_lstm_binary_5k')
 
 
-# In[14]:
+# In[21]:
 
 
-learn.load('fit_lstm');
+learn.load('fit_lstm_binary_5k');
 
 
 # In[38]:
