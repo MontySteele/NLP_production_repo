@@ -6,7 +6,7 @@ from fastai.basics import *
 import json
 
 path = ''
-learn = load_learner(path, 'trained_model.pkl')
+learn = load_learner(path, 'fit_lstm_binary_5k.pkl')
 
 def predictor(test_comment):
         
