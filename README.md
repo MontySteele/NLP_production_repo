@@ -28,7 +28,7 @@ I trained this model on a Google Cloud server using 8 vCPU cores and one Nvidia 
 
 After cloning this repo, make sure that the comment data files are places in the Data directory. Then run the following commands from the Notebook directory:
 
-python "Data cleaning and exploration.py"
+python "Data cleaning.py"
 
 python "fastai-binary.py"
 
@@ -40,7 +40,7 @@ The "Data cleaning and exploration.py" program will output cleaned data files wh
 
 ### Running this project in a production environment ###
 
-After cloning this repo, make sure that the comment data files are places in the Data directory. Then run the following commands from the Notebook directory:
+After cloning this repo, make sure that the comment data files are places in the Data directory. Then run the following commands from the Notebook directory (Data cleaning may be skipped if it was ran in the previous section):
 
 python "Data cleaning and exploration.py"
 
