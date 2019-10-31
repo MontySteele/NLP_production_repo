@@ -5,7 +5,7 @@ from fastai.text import *
 from fastai.basics import *
 import json
 
-path = r'/home/montgomerysteele/nlp_data_msteele/Notebooks'
+path = ''
 learn = load_learner(path, 'trained_model.pkl')
 
 def predictor(test_comment):
