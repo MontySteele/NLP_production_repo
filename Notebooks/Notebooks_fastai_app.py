@@ -3,33 +3,18 @@
 
 # ### This notebook loads in the model that was trained in my 'DL_categorical-fastai' notebook. I have created a 'predictor' function which will make predictions of the number of likes that your comment will receive based on the text provided, and show examples of calling this function below.
 
-# In[1]:
+# In[31]:
 
 
-import os
-cwd = os.getcwd()
-print(cwd)
-
-
-# In[4]:
-
+# Import libraries and then load my model. 
+#Because the cuDNN libraries tend to fail to load the first time, I have the code try again on an exception error to make it work the second time.
 
 from fastai.text import *
 from fastai.basics import *
 try:    
     from keras.backend.tensorflow_backend import set_session
     import tensorflow as tf
-    config = tf.ConfigProto()
-    config.gpu_options.allow_growth = True  # dynamically grow the memory used on the GPU
-    config.log_device_placement = True  # to log device placement (on which device the operation ran)
-    sess = tf.Session(config=config)
-    set_session(sess)  # set thi
-
-    path = r'C:\Users\msteele9\Documents\Springboard\Springboard\Notebooks'
-    learn = load_learner(path, 'trained_model.pkl')
-except:
-    from keras.backend.tensorflow_backend import set_session
-    import tensorflow as tf
+    
     config = tf.ConfigProto()
     config.gpu_options.allow_growth = True  # dynamically grow the memory used on the GPU
     config.log_device_placement = True  # to log device placement (on which device the operation ran)
@@ -37,43 +22,52 @@ except:
     set_session(sess)  # set thi
 
     path = "models/"
-    learn = load_learner(path, 'fit_lstm_binary_5k.pth')
+    learn = load_learner(path, 'balanced_50k.pkl')
+except:
+    from keras.backend.tensorflow_backend import set_session
+    import tensorflow as tf
+    
+    config = tf.ConfigProto()
+    config.gpu_options.allow_growth = True  # dynamically grow the memory used on the GPU
+    config.log_device_placement = True  # to log device placement (on which device the operation ran)
+    sess = tf.Session(config=config)
+    set_session(sess)  # set thi
+
+    path = "models/"
+    learn = load_learner(path, 'balanced_50k.pkl')
 
 
-# In[5]:
+# In[32]:
 
+
+# This function will take a comment and make a prediction based on the content.
 
 def predictor(test_comment):
-    
-    bin = [-1, 1, 5, 1000000]
-    
+ 
     cat, tensor, probs = learn.predict(test_comment)
-    print(probs)
+    
+    #cat = np.argmax(tensor)
     
     category = str(cat)
-    leftBin = str(bin[int(str(cat))])
-    rightBin = str(bin[int(str(cat))+1])
-    
-    print('This comment was placed in category ' + category + '. This means that we predict your comment will have between ' + leftBin + ' and ' + rightBin + ' recommendations.')
+    print(category, probs)
+    if category == '0': print('This comment is predicted to be unpopular and receive no likes.') 
+    else: print('This comment is predicted to be popular and receive some likes.')
 
 
-# In[6]:
+# In[38]:
 
 
-try:
-    predictor("This is a test of the emergency comment system that was placed in category 2 ")
-except:
-    predictor("This is a test of the emergency comment system that was placed in category 2 ")
+predictor("ASAPD")
 
 
-# In[7]:
+# In[37]:
 
 
-string = "Category 0"
+string = "What is the worth of a man these days"
 predictor(string)
 
 
-# In[8]:
+# In[35]:
 
 
 if len(sys.argv) > 0:
