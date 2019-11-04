@@ -34,9 +34,9 @@ python "fastai-binary.py"
 
 python "Notebooks-fastai-app.py" "THIS IS A COMMENT!"
 
-You can replace the last argument to the previous command with any comment of your choice. You will receive a message such as: "This comment was placed in category 0. This means that we predict your comment will have between -1 and 1 recommendations."
+You can replace the last argument to the previous command with any comment of your choice. You will receive a message such as: "This comment is predicted to be unpopular and receive no likes."
 
-The "Data cleaning and exploration.py" program will output cleaned data files which are fed into "fastai-binary.py" to train the model. The model is saved as "trained_model.pkl" in the Notebooks folder. A pre--trained model is not available on this repo as it exceeds the file size limits (~143 MB).
+The "Data cleaning and exploration.py" program will output cleaned data files which are fed into "fastai-binary.py" to train the model. The model is saved as "balanced_50k.pkl" in the Notebooks/models folder. A pre--trained model is not available on this repo as it exceeds the file size limits (~143 MB).
 
 ### Running this project in a production environment ###
 
@@ -54,4 +54,6 @@ http://<Your_IP_address>:8000
 
 To sent an api call, send an html request using the following format: http://<Your_IP_address>:8000/comment/api/?comment=<YOUR_COMMENT_HERE>
 
-The API will return a JSON dictionary formatted as: { <YOUR_COMMENT_HERE> : < A string containing the estimated number of likes here > }
+The API will return a dictionary formatted as: { <YOUR_COMMENT_HERE> : <0 or 1> }
+
+Comments that are predicted to receive no likes will return a 0 value dictionary entry. Comments that are predicted to receive some likes will return a 1 instead.
