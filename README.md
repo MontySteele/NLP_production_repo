@@ -24,6 +24,16 @@ Documentation for installing conda can be found [here.](https://docs.anaconda.co
 
 I trained this model on a Google Cloud server using 8 vCPU cores and one Nvidia k80 GPU for ~6 hours at a cost of ~$10. The fastai library is an API that sits on top of pytorch. Pytorch is designed to work with or without a GPU; however, it is ill-advised to attempt to train this model on a CPU alone. Once the model is trained, it can be run very quickly on new comments with only a CPU, though a GPU will result in a significant speedup for large batch processing.
 
+### Notebooks ###
+
+I documented my work in three Jupyter Notebooks located in the /Notebooks folder. 
+
+First, "Data cleaning.ipynb" shows how the raw data files from Kaggle are loaded and cleaned.
+
+Second, "fastai-binary.ipynb" shows how my AWD-LSTM Neural Network is trained and tested.
+
+Third, I provide an example of how to use this model in "Notebooks-fastai-app.py". The predictor function used here is the same as in the API.
+
 ### Setting up this project ###
 
 After cloning this repo, make sure that the comment data files are places in the Data directory. Then run the following commands from the Notebook directory:
