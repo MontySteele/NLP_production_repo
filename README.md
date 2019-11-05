@@ -83,7 +83,7 @@ Once the language model is trained on my word corpus, I then train it for classi
 My model has a final accuracy of ~70% when run on the full dataset. The f1 score is 0.73, and a confusion matrix is given below (values rounded):
 
 |            | Predicted unpopular  | Predicted popular|
-|            | -------------        | -------------    |
+|  ---       | -------------        | -------------    |
 |  Unpopular |      0.253           |     0.246        |
 |  Popular   |      0.072           |     0.429        |
 
