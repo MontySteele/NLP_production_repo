@@ -67,3 +67,34 @@ To sent an api call, send an html request using the following format: http://<Yo
 The API will return a JSON dictionary formatted as: { <YOUR_COMMENT_HERE> : <0 or 1> }
 
 Comments that are predicted to receive no likes will return a 0 value dictionary entry. Comments that are predicted to receive some likes will return a 1 instead.
+
+### Model Architecture ###
+
+In my production model, I am using an AWD-LSTM (ASDG Weight-Dropped Long Short-term Memory) architecture implemented by the fastai library. AWD-LSTM architectures are a type of Recurrent Neural Network with additional types of dropouts. In addition to the weight dropout common in LSTM, dropout is also used in the embedding layer, the embedding matrix and the output of hidden layers. The documentation for this implementation is available [here.](https://docs.fast.ai/text.models.html)
+
+RNN models are seen as well-suited to NLP analysis because of their 'memory' of recent data that lets them find, e.g. patterns in sentence structure. The AWD-LSTM model is a state-of-the-art improvement on the basic RNN that is well-suited for comment classification.
+
+The model is trained in two steps- first I train a language model which tried to learn our comment dataset by predicting the next word in a given sentence. In this step I apply transfer learning by borrowing the weights of a language model pretrained in the WikiText-103 dataset.
+
+Once the language model is trained on my word corpus, I then train it for classification tasks by giving it a training dataset and asking for predictions of the comment class ('popular' or 'unpolular'). This model is then measured against a test dataset. Both the train and test dataset are balanced to contain equal numbers of 'popular' and 'unpopular' comments.
+
+### Results summary ###
+
+
+
+
+
+### Other attempted models ###
+
+Early on in this project, I attempted to develop a regression model which could predict the exact number of recommendations the comment would get. I started by trying a logistic regression over the comment metadata, but I found that the model would always try to predict the most common class; that is, the model couldn't actually learn anything from the data. In this dataset, this would give an accuracy of ~20%.
+
+I then tried using neural networks because those are widely seen as the state-of-the-art approach for NLP-based problems. I worked with Keras and Tensorflow to design my own neural network, which was able to achieve ~33% accuracy on the regression problem (that is, identifying the exact number of comments 33% of the time). The neural network was able to improve over always guessing the most common class. However, I found that my model's 'like' distribution was consistently smaller than the sample distribution; that is, it would consistently underestimate the correct number of 'likes' for a comment.
+
+I then modified my approach by converting my problem from regression to classification; instead of predicting the number of likes, I sorted my comments into 'unpopular' comments (0 likes) or 'popular' comments (1 or more likes). I also switched to using the LSTM (Long Short-term Memory) architecture, a popular modification of Recurrent Neural Networks (RNN's) that are better able to handle dependencies between parts of the data, such as relationships between words in a sentence. This approach scored ~58% accuracy on the test data.
+
+At this point I switched to using pyTorch and fastai as the fastai library offers a quick and easy implementation of an AWD-LSTM model with transfer learning applied, as described above. Switching to this approach increased my accuracy as high as 86%, but I found that the output prediction distribution contained very few 'unpopular' comments; that is, the model would predict almost all comments as 'popular', so the high accuracy score was an artifact of the test set consisting of relatively few 'unpopular' comments. The false-negative rate was very high, with accuracy on 'unpolular' test comments as low as ~25%.
+
+To fix this problem, I used a balanced training and testing data set where the number of 'popular' and 'unpopular' comments were equal. I retrained my model on this set and my overall accuracy was reduced to ~70%, but the model's false-negative rate went down significantly and the model's accuracy on 'unpolular' comments increased to 51%. My model still performs poorly on these comments but is better than random.
+
+
+### Final thoughts ###
